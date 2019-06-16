@@ -1,10 +1,37 @@
 .popup-container {
+    position: fixed;
+    width: 100%;
+    margin-right: 20px;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #333;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+}
+
+.content {
+    z-index: 1;
+    opacity: 1;
+    background: white;
+    width: 200px;
     height: auto;
-    width: 100px;
-    background-color: bisque;
+}
+
+.message {
+    padding: 5px;
+    width: inherit;
+    flex-basis: 100%;
 }
 
 .dismiss {
+    z-index: 1;
+    padding: 5px;
     background-color: red;
     color: white;
+    flex-shrink: 0;
+    cursor: pointer;
 }
