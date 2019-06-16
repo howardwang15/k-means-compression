@@ -1,0 +1,10 @@
+.popup-container {
+    height: auto;
+    width: 100px;
+    background-color: bisque;
+}
+
+.dismiss {
+    background-color: red;
+    color: white;
+}
