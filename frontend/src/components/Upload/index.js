@@ -16,7 +16,7 @@ export default class Upload extends React.Component {
     
     validate = filename => {
         let extension = filename.split('.').pop();
-        if (extension != 'png' && extension != 'jpg' && extension != 'pdf') {
+        if (extension != 'png' && extension != 'jpg' && extension != 'pdf' && extension != 'txt') {
             return false;
         }
         return true;
@@ -38,6 +38,10 @@ export default class Upload extends React.Component {
         this.setState((prevState, props) => {
             return { error: null }
         });
+    }
+
+    handleUpload = () => {
+        this.props.uploadFile(this.state.file);
     }
 
     render() {
@@ -64,7 +68,7 @@ export default class Upload extends React.Component {
                     </div>
                     <div className="actions" />
                     <Dropzone onFileAdded={this.onFileAdded}/>
-                    <button className="button" style={style}>Compress</button>
+                    <button className="button" style={style} onClick={this.handleUpload}>Compress</button>
                     <button className="button" style={style}>Clear</button>
                 </div>
             </div>

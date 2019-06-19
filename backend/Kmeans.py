@@ -1,28 +1,30 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import cv2
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import math
 
-get_ipython().run_line_magic('matplotlib', 'inline')
 
+def decode_image(filename, byte_array):
+    decoded = cv2.imdecode(np.frombuffer(byte_array, np.uint8), -1)
+    return decoded
 
-# In[15]:
-
-
-img = cv2.imread('raptors.jpg')
-img = cv2.resize(img, None, fx=0.2, fy=0.2)
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # convert to rgb image
-plt.imshow(img)
-img = img.astype(float) # convert from unsigned int to float to make distance calculations correct
-
-
-# In[3]:
+def compress_image(filename, byte_array):
+    image = decode_image(filename, byte_array)
+    height, width, _ = image.shape
+    if height > 480:
+        resize_ratio = 480./height
+        image = cv2.resize(image, None, fx=resize_ratio, fy=resize_ratio)
+    print(image.shape)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = image.astype(float) # convert from unsigned int to float to make distance calculations correct
+    compressed = k_means_driver(image, 4)
+    cv2.imwrite(filename, compressed)
 
 
 def get_distance(p1, p2): # takes 2 rgb values and finds the l2 norm of their difference
@@ -62,10 +64,6 @@ def initialize_means(img, k):
                     max_distance = min_dist_to_previous_means
                     mu[current] = img[i][j]
     return mu
-
-
-# In[4]:
-
 
 def k_means(mu, img, n_iterations=10):
     '''
@@ -107,18 +105,14 @@ def k_means(mu, img, n_iterations=10):
     return classifications, points, errors, mu
                 
 
-
-# In[5]:
-
-
-# # plotting for part b
+# # # plotting for part b
 # iterations = [i+1 for i in range(10)]
-# plt.plot(iterations, errors)
-# plt.xlabel('iterations')
-# plt.ylabel('error (*1e8)')
+# # plt.plot(iterations, errors)
+# # plt.xlabel('iterations')
+# # plt.ylabel('error (*1e8)')
 
 
-# In[18]:
+# # In[18]:
 
 
 def compress(points, mu, img):
@@ -142,10 +136,5 @@ def k_means_driver(img, k): # run the k-means algorithm
     print(mu)
     compressed = img.copy()
     compressed = compress(points, mu, compressed)
-    plt.imshow(compressed)
-    plt.show()
-
-# for k in [4,8]:
-#     k_means_driver(img, k)
-k_means_driver(img, 16)
+    return compressed
 
