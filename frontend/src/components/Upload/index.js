@@ -9,7 +9,8 @@ export default class Upload extends React.Component {
         this.state = {
             file: [],
             error: null,
-            uploaded: false
+            uploaded: false,
+            url: null
         };
     }
 
@@ -24,9 +25,11 @@ export default class Upload extends React.Component {
 
     onFileAdded = uploaded => {
         if (this.validate(uploaded.name)) {
+            let url = URL.createObjectURL(uploaded);
             this.setState((prevState, props) => {
-                return { file: [uploaded], uploaded: true };
+                return { file: [uploaded], uploaded: true, url };
             });
+            this.props.updatePreviewUrl(url);
         } else {
             this.setState((prevState, props) => {
                 return { error: 'Invalid file format!' }
@@ -70,6 +73,9 @@ export default class Upload extends React.Component {
                     <Dropzone onFileAdded={this.onFileAdded}/>
                     <button className="button" style={style} onClick={this.handleUpload}>Compress</button>
                     <button className="button" style={style}>Clear</button>
+                </div>
+                <div>
+                    <img src={this.state.url} width="50%"></img>
                 </div>
             </div>
         )

@@ -104,17 +104,6 @@ def k_means(mu, img, n_iterations=10):
         errors.append(total_error)
     return classifications, points, errors, mu
                 
-
-# # # plotting for part b
-# iterations = [i+1 for i in range(10)]
-# # plt.plot(iterations, errors)
-# # plt.xlabel('iterations')
-# # plt.ylabel('error (*1e8)')
-
-
-# # In[18]:
-
-
 def compress(points, mu, img):
     '''
     Compresses the image based on the means and the clusters
