@@ -7,8 +7,9 @@ export default class Upload extends React.Component {
     constructor() {
         super();
         this.state = {
-            files: [],
-            error: null
+            file: [],
+            error: null,
+            uploaded: false
         };
     }
 
@@ -24,7 +25,7 @@ export default class Upload extends React.Component {
     onFileAdded = uploaded => {
         if (this.validate(uploaded.name)) {
             this.setState((prevState, props) => {
-                return { file: uploaded }
+                return { file: [uploaded], uploaded: true };
             });
         } else {
             this.setState((prevState, props) => {
@@ -40,6 +41,7 @@ export default class Upload extends React.Component {
     }
 
     render() {
+        const style = this.state.uploaded ? {} : {visibility: "hidden"};
         return (
             <div className="upload-container">
                 {
@@ -51,9 +53,10 @@ export default class Upload extends React.Component {
                         <div />
                         <div className="files">
                         {
-                            this.state.files.map(file => (
-                                <div key={file.name} className="Row">
-                                    <span className="Filename">{file.name}</span>
+                            this.state.file.map(file => (
+                                <div key={file.name} className="row">
+                                    <span className="filename">{file.name}</span>
+                                    <img src="https://www.sccpre.cat/mypng/detail/1-14062_green-check-png-green-circle-check-mark.png" width="15px" height="15px"/>
                                 </div>
                             ))
                         }
@@ -61,6 +64,8 @@ export default class Upload extends React.Component {
                     </div>
                     <div className="actions" />
                     <Dropzone onFileAdded={this.onFileAdded}/>
+                    <button className="button" style={style}>Compress</button>
+                    <button className="button" style={style}>Clear</button>
                 </div>
             </div>
         )
