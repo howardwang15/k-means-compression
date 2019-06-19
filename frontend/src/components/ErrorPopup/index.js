@@ -6,7 +6,7 @@ export default class ErrorPopup extends React.Component {
         return (
             <div className="popup-container">
                 <div className="content">
-                    {/* <img src="https://mgreena0.files.wordpress.com/2012/04/red-warning-sign.jpg" width='50px'/> */}
+                    <img src="https://mgreena0.files.wordpress.com/2012/04/red-warning-sign.jpg" width='50px'/>
                     <div className="message">{this.props.message}</div>
                     <div className="dismiss" onClick={this.props.onClose}>
                         Dismiss

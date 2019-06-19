@@ -41,12 +41,12 @@ export default class Upload extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="upload-container">
                 {
                     this.state.error ? <ErrorPopup message={this.state.error} onClose={this.onErrorClose} /> : null
                 }
                 <div className="upload">
-                    <span className="title">Upload Files</span>
+                    <h2 className="title">Upload Files</h2>
                     <div className="content-upload">
                         <div />
                         <div className="files">
