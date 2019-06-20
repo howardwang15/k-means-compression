@@ -3,28 +3,42 @@
 
 
 import cv2
+import os
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import math
 
+def get_extension(filename):
+    return os.path.splitext(filename)[-1]
 
-def decode_image(filename, byte_array):
+def decode_image(byte_array):
     decoded = cv2.imdecode(np.frombuffer(byte_array, np.uint8), -1)
     return decoded
 
+def resize(filename, byte_array):
+    image = decode_image(byte_array)
+    height, width, _ = image.shape
+    resize_ratio = 480./height
+    image = image.astype(float)
+    image = cv2.resize(image, None, fx=resize_ratio, fy=resize_ratio)
+    extension = get_extension(filename)
+    _, buffer = cv2.imencode(extension, image)
+    return buffer
+
 def compress_image(filename, byte_array):
-    image = decode_image(filename, byte_array)
+    image = decode_image(byte_array)
     height, width, _ = image.shape
     if height > 480:
         resize_ratio = 480./height
         image = cv2.resize(image, None, fx=resize_ratio, fy=resize_ratio)
-    print(image.shape)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.astype(float) # convert from unsigned int to float to make distance calculations correct
-    compressed = k_means_driver(image, 4)
+    compressed = k_means_driver(image, 8)
+    extension = get_extension(filename)
+    _, buffer = cv2.imencode(extension, compressed)
     cv2.imwrite(filename, compressed)
+    return buffer
 
 
 def get_distance(p1, p2): # takes 2 rgb values and finds the l2 norm of their difference
@@ -126,4 +140,3 @@ def k_means_driver(img, k): # run the k-means algorithm
     compressed = img.copy()
     compressed = compress(points, mu, compressed)
     return compressed
-
