@@ -9,25 +9,30 @@ export default class Upload extends React.Component {
         this.state = {
             file: [],
             error: null,
-            uploaded: false,
-            url: null
+            uploaded: false
         };
     }
 
     
-    validate = filename => {
+    validate = uploaded => {
+        let filename = uploaded.name;
         let extension = filename.split('.').pop();
         if (extension != 'png' && extension != 'jpg' && extension != 'pdf' && extension != 'txt') {
             return false;
+        }
+        let img = new Image();
+        img.src = URL.createObjectURL(uploaded);
+        img.onload = function() {
+            console.log(this.width, ", ", this.height);
         }
         return true;
     }
 
     onFileAdded = uploaded => {
-        if (this.validate(uploaded.name)) {
+        if (this.validate(uploaded)) {
             let url = URL.createObjectURL(uploaded);
             this.setState((prevState, props) => {
-                return { file: [uploaded], uploaded: true, url };
+                return { file: [uploaded], uploaded: true };
             });
             this.props.updatePreviewUrl(url);
         } else {
@@ -35,6 +40,13 @@ export default class Upload extends React.Component {
                 return { error: 'Invalid file format!' }
             });
         }
+    }
+
+    resetUpload = () => {
+        this.setState((prevState, props) => {
+            return { error: null, file: [] };
+        });
+        this.props.updatePreviewUrl(null);
     }
 
     onErrorClose = () => {
@@ -69,13 +81,9 @@ export default class Upload extends React.Component {
                         }
                         </div>
                     </div>
-                    <div className="actions" />
                     <Dropzone onFileAdded={this.onFileAdded}/>
                     <button className="button" style={style} onClick={this.handleUpload}>Compress</button>
-                    <button className="button" style={style}>Clear</button>
-                </div>
-                <div>
-                    <img src={this.state.url} width="50%"></img>
+                    <button className="button" style={style} onClick={this.resetUpload}>Clear</button>
                 </div>
             </div>
         )
