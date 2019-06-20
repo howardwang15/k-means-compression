@@ -13,33 +13,52 @@ export default class Upload extends React.Component {
         };
     }
 
-    
-    validate = uploaded => {
-        let filename = uploaded.name;
-        let extension = filename.split('.').pop();
-        if (extension != 'png' && extension != 'jpg' && extension != 'pdf' && extension != 'txt') {
-            return false;
-        }
-        let img = new Image();
-        img.src = URL.createObjectURL(uploaded);
-        img.onload = function() {
-            console.log(this.width, ", ", this.height);
-        }
-        return true;
+
+    validate = (uploaded) => {
+        return new Promise((resolve, reject) => {
+            let filename = uploaded.name;
+            let extension = filename.split('.').pop();
+            if (extension != 'png' && extension != 'jpg' && extension != 'pdf' && extension != 'txt') {
+                resolve(false);
+            }
+            let img = new Image();
+            img.src = URL.createObjectURL(uploaded);
+            img.onload = () => {
+                if (img.height > 480) {
+                    let formdata = new FormData();
+                    formdata.append("file", uploaded);
+                    fetch("http://localhost:5000/resize", {
+                        method: "POST",
+                        mode: "cors",
+                        body: formdata
+                    })
+                    .then(res => res.blob())
+                    .then(blob => {
+                        let url = URL.createObjectURL(blob);
+                        this.props.updatePreviewUrl(url);
+                        resolve(true);
+                    });
+                } else {
+                    this.props.updatePreviewUrl(URL.createObjectURL(img));
+                    resolve(true);
+                }
+            }
+        })
     }
 
     onFileAdded = uploaded => {
-        if (this.validate(uploaded)) {
-            let url = URL.createObjectURL(uploaded);
-            this.setState((prevState, props) => {
-                return { file: [uploaded], uploaded: true };
-            });
-            this.props.updatePreviewUrl(url);
-        } else {
-            this.setState((prevState, props) => {
-                return { error: 'Invalid file format!' }
-            });
-        }
+        this.validate(uploaded)
+        .then(valid => {
+            if (!valid) {
+                this.setState((prevState, props) => {
+                    return { error: 'Invalid file format!' }
+                });
+            } else {
+                this.setState((prevState, props) => {
+                    return { file: [uploaded], uploaded: true };
+                });
+            }
+        })
     }
 
     resetUpload = () => {
