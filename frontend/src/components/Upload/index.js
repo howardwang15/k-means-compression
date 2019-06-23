@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropzone from '../Dropzone';
 import ErrorPopup from '../ErrorPopup';
+// import Check from x'../../static/check.jpg';
 import './styles.css';
 
 export default class Upload extends React.Component {
@@ -39,7 +40,7 @@ export default class Upload extends React.Component {
                         resolve(true);
                     });
                 } else {
-                    this.props.updatePreviewUrl(URL.createObjectURL(img));
+                    this.props.updatePreviewUrl(URL.createObjectURL(uploaded));
                     resolve(true);
                 }
             }
@@ -66,6 +67,7 @@ export default class Upload extends React.Component {
             return { error: null, file: [] };
         });
         this.props.updatePreviewUrl(null);
+        this.props.updateCompressedUrl(null);
     }
 
     onErrorClose = () => {
@@ -94,7 +96,7 @@ export default class Upload extends React.Component {
                             this.state.file.map(file => (
                                 <div key={file.name} className="row">
                                     <span className="filename">{file.name}</span>
-                                    <img src="https://www.sccpre.cat/mypng/detail/1-14062_green-check-png-green-circle-check-mark.png" width="15px" height="15px"/>
+                                    {/* <img src={Check} width="15px" height="15px" /> */}
                                 </div>
                             ))
                         }

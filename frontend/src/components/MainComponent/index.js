@@ -10,6 +10,7 @@ export default class MainComponent extends React.Component {
                 <Upload
                     uploadFile={this.props.uploadFile}
                     updatePreviewUrl={this.props.updatePreviewUrl}
+                    updateCompressedUrl={this.props.updateCompressedUrl}
                     />
                 <ImageDisplay
                     previewUrl={this.props.previewUrl}

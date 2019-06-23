@@ -18,7 +18,13 @@ export default class Home extends React.Component {
     updatePreviewUrl = (url) => {
         this.setState((prevState, props) => {
             return { previewUrl: url };
-        })
+        });
+    }
+
+    updateCompressedUrl = (url) => {
+        this.setState((prevState, props) => {
+            return { compressedUrl: url };
+        });
     }
 
     uploadFile = (file) => {
@@ -37,7 +43,7 @@ export default class Home extends React.Component {
         .then(res => res.blob())
         .then(blob => {
             let url = URL.createObjectURL(blob);
-            this.setState((prevSTate, props) => {
+            this.setState((prevState, props) => {
                 return { spinner: false, compressedUrl: url };
             });
         });
@@ -54,6 +60,7 @@ export default class Home extends React.Component {
                         previewUrl={this.state.previewUrl}
                         compressedUrl={this.state.compressedUrl}
                         updatePreviewUrl={this.updatePreviewUrl}
+                        updateCompressedUrl={this.updateCompressedUrl}
                         />
                 </div>
             </div>
