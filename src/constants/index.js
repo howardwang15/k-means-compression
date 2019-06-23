@@ -1,0 +1,1 @@
+export const API_URL = "https://k-means-compression-api.herokuapp.com";

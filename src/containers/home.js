@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import MainComponent from '../components/MainComponent';
 import Spinner from '../components/Spinner';
-import axios from 'axios';
+import { API_URL } from '../constants';
 
 export default class Home extends React.Component {
 
@@ -35,7 +35,7 @@ export default class Home extends React.Component {
         let formdata = new FormData();
         formdata.append("file", file);
         formdata.append("name", "file");
-        fetch("http://localhost:5000/upload", {
+        fetch(`${API_URL}/upload`, {
             method: "POST",
             mode: "cors",
             body: formdata

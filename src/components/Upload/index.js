@@ -3,6 +3,7 @@ import Dropzone from '../Dropzone';
 import ErrorPopup from '../ErrorPopup';
 // import Check from x'../../static/check.jpg';
 import './styles.css';
+import { API_URL } from '../../constants';
 
 export default class Upload extends React.Component {
     constructor() {
@@ -28,7 +29,7 @@ export default class Upload extends React.Component {
                 if (img.height > 480) {
                     let formdata = new FormData();
                     formdata.append("file", uploaded);
-                    fetch("http://localhost:5000/resize", {
+                    fetch(`${API_URL}/resize`, {
                         method: "POST",
                         mode: "cors",
                         body: formdata
